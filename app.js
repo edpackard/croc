@@ -61,8 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (wallCollision(playerX, xCoordShift)) {
       return;
     }
-    if (crocCollision(playerX, xCoordShift)) {
-      gameOver();
+    if (crocCollision(xCoordShift)) {
+      gameOver(xCoordShift);
       return;
     }
     removeOldLocation();
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return newX === LEFT_BOUNDARY || newX === RIGHT_BOUNDARY;
   }
 
-  function crocCollision(currentX, xCoordShift) {
+  function crocCollision(xCoordShift) {
     let crocCheck = document.querySelector(
       `img[col="${playerX + xCoordShift}"][row="${playerY + 1}"]`
     );
@@ -112,7 +112,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1500);
   }
 
-  function gameOver() {
+  function gameOver(xCoordShift) {
+    removeOldLocation();
+    playerX += xCoordShift;
+    playerY += 1;
     drawNewLocation("./images/blood.png");
     document.querySelector("span[class=deathcount]").innerText =
       deathcount += 1;

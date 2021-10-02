@@ -6,6 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
     ["Croc", "Croc", "Water", "Croc", "Croc"],
   ];
 
+  document.getElementById("left").addEventListener("click", function () {
+    alert("Left");
+  });
+  document.getElementById("straight").addEventListener("click", function () {
+    alert("Straight");
+  });
+  document.getElementById("right").addEventListener("click", function () {
+    alert("Right");
+  });
+
   const gameGrid = document.querySelector(".grid");
 
   function createBoard() {
@@ -23,9 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
         tile.setAttribute("col", col); // might not need this
         gameGrid.appendChild(tile);
       }
-      // let breaker = document.createElement("div");
-      // breaker.setAttribute("class", "break");
-      // gameGrid.appendChild(breaker);
     }
   }
 

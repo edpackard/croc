@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let playerX = 2;
   let playerY = 0;
+  let deathcount = 0;
+  let wincount = 0;
+  const LEFT_BOUNDARY = -1;
+  const RIGHT_BOUNDARY = levelMap[0].length;
 
   document.getElementById("left").addEventListener("click", function () {
     movePlayer(-1);
@@ -21,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     movePlayer(1);
   });
 
-  function initialiseGame() {
+  function initialiseGrid() {
     const gameGrid = document.querySelector(".grid");
     for (let row = 0; row < levelMap.length; row++) {
       for (let col = 0; col < levelMap[row].length; col++) {
@@ -57,32 +61,75 @@ document.addEventListener("DOMContentLoaded", () => {
     if (wallCollision(playerX, xCoordShift)) {
       return;
     }
+    if (crocCollision(playerX, xCoordShift)) {
+      gameOver();
+      return;
+    }
     removeOldLocation();
     playerX += xCoordShift;
     playerY += 1;
     drawNewLocation();
+    if (checkWin()) {
+      winGame();
+    }
   }
 
   function removeOldLocation() {
     let currentLocation = document.querySelector(
       `img[col="${playerX}"][row="${playerY}"]`
     );
+    console.log(currentLocation);
     currentLocation.src = "./images/water.png";
   }
 
-  function drawNewLocation() {
+  function drawNewLocation(image = "./images/swimmer.png") {
     let newLocation = document.querySelector(
       `img[col="${playerX}"][row="${playerY}"]`
     );
-    newLocation.src = "./images/swimmer.png";
+    newLocation.src = image;
   }
 
   function wallCollision(currentX, xCoordShift) {
     let newX = (currentX += xCoordShift);
-    return newX === -1 || newX === 5;
+    return newX === LEFT_BOUNDARY || newX === RIGHT_BOUNDARY;
   }
 
-  initialiseGame();
+  function crocCollision(currentX, xCoordShift) {
+    let crocCheck = document.querySelector(
+      `img[col="${playerX + xCoordShift}"][row="${playerY + 1}"]`
+    );
+    return crocCheck.id === "croc";
+  }
+
+  function checkWin() {
+    return playerY === 3;
+  }
+
+  function winGame() {
+    document.querySelector("span[class=wincount]").innerText = wincount += 1;
+    setTimeout(function () {
+      newGame();
+    }, 1500);
+  }
+
+  function gameOver() {
+    drawNewLocation("./images/blood.png");
+    document.querySelector("span[class=deathcount]").innerText =
+      deathcount += 1;
+    setTimeout(function () {
+      newGame();
+    }, 1500);
+  }
+
+  function newGame() {
+    const gameGrid = document.querySelector(".grid");
+    gameGrid.innerHTML = "";
+    playerX = 2;
+    playerY = 0;
+    initialiseGrid();
+  }
+
+  newGame();
 
   // create river: 4 rows of 5 columns - done
   // create crocs - done
@@ -90,6 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // create ui - 3 buttons - done
   // handle player movement - done
   // handle collision detection: walls - done
-  // handle collision detection: crocs
+  // handle collision detection: crocs - done
   // handle end game
 });

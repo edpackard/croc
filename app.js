@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let playerX;
   let playerY;
+  let gameState;
   let deathCount = 0;
   let winCount = 0;
   const LEFT_BOUNDARY = -1;
@@ -58,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function movePlayer(xCoordShift) {
-    if (wallCollision(playerX, xCoordShift)) {
+    if (wallCollision(playerX, xCoordShift) || gameState === false) {
       return;
     }
     removeOldLocation();
@@ -115,6 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function resetGame() {
+    gameState = false;
     setTimeout(function () {
       newGame();
     }, 1500);
@@ -125,6 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
     gameGrid.innerHTML = "";
     playerX = 2;
     playerY = 0;
+    gameState = true;
     initialiseGrid();
   }
 

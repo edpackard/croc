@@ -5,7 +5,7 @@ This was a silly weekend effort, messing around with DOM manipulation and some b
 # How to install this program
 
 ```
-git clone <repo name here>
+git clone https://github.com/edpackard/croc.git
 cd croc
 open index.html
 ```

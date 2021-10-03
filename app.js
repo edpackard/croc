@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
     ["C", "C", "W", "C", "C"],
   ];
 
-  let playerX = 2;
-  let playerY = 0;
-  let deathcount = 0;
-  let wincount = 0;
+  let playerX;
+  let playerY;
+  let deathCount = 0;
+  let winCount = 0;
   const LEFT_BOUNDARY = -1;
   const RIGHT_BOUNDARY = levelMap[0].length;
 
@@ -61,16 +61,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (wallCollision(playerX, xCoordShift)) {
       return;
     }
-    if (crocCollision(xCoordShift)) {
-      gameOver(xCoordShift);
-      return;
-    }
     removeOldLocation();
     playerX += xCoordShift;
     playerY += 1;
+    if (crocCollision()) {
+      endGame("./images/blood.png", "deathcount");
+      return;
+    }
     drawNewLocation();
     if (checkWin()) {
-      winGame();
+      endGame("./images/trophy.png", "wincount");
     }
   }
 
@@ -94,10 +94,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return newX === LEFT_BOUNDARY || newX === RIGHT_BOUNDARY;
   }
 
-  function crocCollision(xCoordShift) {
+  function crocCollision() {
     let crocCheck = document.querySelector(
-      `img[col="${playerX + xCoordShift}"][row="${playerY + 1}"]`
+      `img[col="${playerX}"][row="${playerY}"]`
     );
+    console.log(crocCheck);
     return crocCheck.id === "croc";
   }
 
@@ -105,20 +106,15 @@ document.addEventListener("DOMContentLoaded", () => {
     return playerY === 3;
   }
 
-  function winGame() {
-    document.querySelector("span[class=wincount]").innerText = wincount += 1;
-    setTimeout(function () {
-      newGame();
-    }, 1500);
+  function endGame(img, count) {
+    drawNewLocation(img);
+    let countType =
+      count === "deathcount" ? (deathCount += 1) : (winCount += 1);
+    document.querySelector(`span[class=${count}]`).innerText = countType;
+    resetGame();
   }
 
-  function gameOver(xCoordShift) {
-    removeOldLocation();
-    playerX += xCoordShift;
-    playerY += 1;
-    drawNewLocation("./images/blood.png");
-    document.querySelector("span[class=deathcount]").innerText =
-      deathcount += 1;
+  function resetGame() {
     setTimeout(function () {
       newGame();
     }, 1500);
@@ -133,13 +129,4 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   newGame();
-
-  // create river: 4 rows of 5 columns - done
-  // create crocs - done
-  // create player - done
-  // create ui - 3 buttons - done
-  // handle player movement - done
-  // handle collision detection: walls - done
-  // handle collision detection: crocs - done
-  // handle end game
 });
